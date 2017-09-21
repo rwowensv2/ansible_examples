@@ -1,0 +1,20 @@
+---
+# simple config file management
+# example 2
+- name: manage mysql sysctl
+  hosts: mysql
+  become: yes
+  become_method: sudo
+  become_user: root
+
+  tasks:
+    - name: manage sysctl
+      template: 
+        src: /tmpl/dir/10-mysql.conf 
+        dest: /etc/sysctl.d/10-mysql.conf
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: sysctl load
+      command: /sbin/sysctl -p /etc/sysctl.d/10-mysql.conf
