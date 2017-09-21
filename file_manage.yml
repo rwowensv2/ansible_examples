@@ -1,0 +1,16 @@
+---
+# simple config file management
+- name: manage jboss stuff
+  hosts: jboss
+  become: yes
+  become_method: sudo
+  become_user: root
+
+  tasks:
+    - name: manage limits
+      template: 
+        src: /tmpl/dir/10-jboss.conf 
+        dest: /etc/security/limits.d/10-jboss.conf
+        owner: root
+        group: root
+        mode: 0644
