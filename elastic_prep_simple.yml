@@ -1,0 +1,110 @@
+---
+- name: prep stuff on rhel7
+  hosts: elastic
+  become: yes
+  become_method: sudo
+  become_user: root
+# set password?  tower defined in web console.
+#  vars:
+#    password: $6$IS3t7BnV$/ffHD7UOLRw10OjckGuunJV85CgocrCPAhhFYaiVsYukp7TY2.JEarXpDEuujZ5MaoR5A3MiGr3MxoPj8IxEt0
+  remote_user: root
+ 
+  tasks:
+    - name: add elastic remote_user
+      - group:
+          gid: 2001
+          name: elastic
+      - user:
+          name: elastic
+          comment: "Elastic Service Account"
+          group: elastic
+          uid: 2001
+          shell: /bin/bash
+#
+#    - name: elastic pass
+#      - user:
+#        name: elastic
+#        password: {{ password }}
+   
+    - name: create mount point
+      - file:
+          path: /mnt/data/
+          owner: elastic
+          group: elastic
+          mode: 0700
+ 
+    - name: add fstab entry
+ 
+    - name: create docker data dir
+      - file:
+          path: /mnt/data/docker
+          owner: root
+          group: root
+          mode: 0711
+ 
+    - name: install packages
+      - yum:
+          name: {{ item }}
+          state: present
+        # with_items include path if rpm
+        with_items:
+          - docker-engine
+          - docker-engine-selinux
+          - python-docker-py
+          - libcgroup-tools
+ 
+    - name: add elastic docker group
+      - user:
+          name: elastic
+          groups: elastic,docker
+ 
+    - name: create docker systemd dir
+      - file:
+          path: /etc/systemd/system/docker.service.d
+          owner: root
+          group: root
+          mode: 0755
+ 
+    - name: create docker systemd
+      - template:
+          src: /file/location/docker.local.conf.tmpl
+          dest: /etc/systemd/system/docker.service.d/local.conf
+          user: root
+          group: root
+          mode: 0644
+ 
+    - name: create docker sysctl
+      - template:
+          src: /file/location/10-docker.conf.tmpl
+          dest: /etc/sysctl.d/10-docker.conf
+          user: root
+          group: root
+          mode: 0644
+ 
+    - name: docker sysctl
+      command: sysctl -p /etc/sysctl.d/10-docker.conf
+ 
+    - name: enable start docker
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+ 
+    - name: elastic limits
+      - template:
+          src: /file/location/10-elastic.conf
+          dest: /etc/security/limits.d/10-elastic.conf
+          user: root
+          group: root
+          mode: 0644
+ 
+    - name: elastic sysctl
+      - template:
+          src: /file/location/20-elastic.conf
+          dest: /etc/sysctl.d/20-elastic.conf
+          user: root
+          group: root
+          mode: 0644
+ 
+    - name: elastic sysctl
+      - command: sysctl -p /etc/sysctl.d/20-elastic.conf
