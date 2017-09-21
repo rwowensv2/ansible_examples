@@ -1,0 +1,14 @@
+---
+# simple patch management
+- name: patch rhel
+  hosts: centjboss
+  become: yes
+  become_method: sudo
+  become_user: root
+
+  tasks:
+  	- name: patch boxes
+  	  yum: 
+  	    name: '*'
+  	    state: latest
+ #       exclude: kernel*
