@@ -1,0 +1,14 @@
+---
+# get_standalone.yml
+# Author: Robert Owens ()
+# Fetch remote wildfly standalone.xml configs.
+
+- name: fetchconfig
+  hosts: wildflyall
+  become: no
+  become_method: su
+  become_user: root
+
+  tasks:
+    - name: Get Standalone.conf
+      fetch: src=/opt/wildfly/standalone/configuration/standalone.xml dest=/home/rwowensv2/wfconf/{{ inventory_hostname }}.xml flat=yes     
