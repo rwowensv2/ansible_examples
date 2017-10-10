@@ -1,0 +1,107 @@
+---
+# wildfly_install.yml
+# Playbook Old Script
+# --
+# Basic: 
+# break out to roles, supply/define vars for standalone.xml copy etc.
+- name: wildfly_install
+  hosts: new
+  become: yes
+  become_method: su
+  become_user: root
+  vars_files:
+    - ../vault.yaml
+  vars:
+    ansible_become_pass: "{{ root }}"
+#    password: $6$Jz/FWpVp$......khR/na8fqnPuJyr01
+
+  tasks:
+  - name: Unlink old 
+    file:
+      path: /opt/java
+      state: absent
+    file:
+      path: /opt/wildfly
+      state: absent
+
+  - name: Groupadd
+    group:
+      gid: 2014
+      name: jboss
+      state: present
+
+  - name: Useradd
+    user:
+      name: jboss
+      comment: "groupadmin@fqdn.dom"
+      group: jboss
+      uid: 2014
+      shell: /bin/bash
+      state: present
+
+  - name: get wildfly package
+    get_url:
+      url: https://locationofpackage.dom/pub/wildfly-10.1.0.Final.tar.gz
+      dest: /opt/wildfly-10.1.0.Final.tar.gz
+      force: yes
+      mode: 0644
+      validate_certs: no
+    ignore_errors: no
+
+  - name: get java
+    get_url: 
+      url: https://locationofpackage.dom/pub/jdk-8u131-linux-x64.tar.gz
+      dest: /opt/jdk-8u131-linux-x64.tar.gz
+      force: yes
+      mode: 0644
+      validate_certs: no
+    ignore_errors: no
+
+  - name: Unarchive wildfly
+    unarchive:
+      src: /opt/wildfly-10.1.0.Final.tar.gz
+      dest: /opt
+      remote_src: yes
+
+  - name: Unarchive java
+    unarchive:
+      src: /opt/jdk-8u131-linux-x64.tar.gz
+      dest: /opt
+      remote_src: yes
+
+  - name: Validate Symlinks
+    file:
+      src: /opt/jdk1.8.0_131
+      dest: /opt/java
+      owner: jboss
+      group: jboss
+      state: link
+    file:
+      src: /opt/wildfly-10.1.0.Final
+      dest: /opt/wildfly
+      owner: jboss
+      group: jboss
+      state: link
+    ignore_errors: no
+
+  - name: Get Custom Init Script
+    get_url:
+      url: https://locationofpackage.dom/pub/wildfly10.init
+      dest: /etc/init.d/wildfly
+      force: yes
+      mode: 0755
+      validate_certs: no
+    ignore_errors: no
+
+  - name: enable service
+    service:
+      name: wildfly
+      enabled: yes
+ 
+  - name: Remove Files
+    file:
+      path: /opt/jdk-8u131-linux-x64.tar.gz
+      state: absent
+    file:
+      path: /opt/wildfly-10.1.0.Final.tar.gz
+      state: absent
