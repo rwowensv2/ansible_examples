@@ -1,14 +1,13 @@
 ---
-# simple patch management
 - name: patch rhel
-  hosts: centjboss
+  hosts: centos67.owens.org
   become: yes
   become_method: sudo
   become_user: root
 
   tasks:
-  	- name: patch boxes
-  	  yum: 
-  	    name: '*'
-  	    state: latest
- #       exclude: kernel*
+  - name: patch boxes
+    yum: 
+      name: '*'
+      state: latest
+      #       exclude: kernel*

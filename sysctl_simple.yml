@@ -2,7 +2,7 @@
 # simple config file management
 # example 2
 - name: manage mysql sysctl
-  hosts: mysql
+  hosts: centos67.owens.org
   become: yes
   become_method: sudo
   become_user: root
@@ -10,7 +10,7 @@
   tasks:
     - name: manage sysctl
       template: 
-        src: /tmpl/dir/10-mysql.conf 
+        src: ../../tmp/10-mysql.conf 
         dest: /etc/sysctl.d/10-mysql.conf
         owner: root
         group: root
