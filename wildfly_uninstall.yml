@@ -1,16 +1,7 @@
 ---
-#rm -f /opt/jdk-8u131-linux-x64.tar.gz
-#rm -f /opt/wildfly-10.1.0.Final.tar.gz
-#rm -rf /opt/jdk1.8.0_131
-#rm -rf /opt/wildfly-10.1.0.Final
-#systemctl stop wildfly.service
-#systemctl disable wildfly.service
-#rm /etc/systemd/system/[servicename]
-#rm /etc/systemd/system/[servicename] symlinks that might be related
-#systemctl daemon-reload
-#systemctl reset-failed
+#
 - name: wildfly uninstall
-  hosts: centos
+  hosts: centos67.owens.org
   become: yes
   become_user: root
   become_method: sudo
@@ -21,6 +12,9 @@
         name: wildfly.service
         state: stopped
       ignore_errors: yes
+      when:
+        - ansible_os_family == "RedHat"
+        - ansible_distribution_major_version == "7"
     - systemd:
         name: wildfly.service
         enabled: no
@@ -52,6 +46,7 @@
       when:
         - ansible_os_family == "RedHat"
         - ansible_distribution_major_version == "6"
+      ignore_errors: yes
 
     - name: remove service file
       file:
@@ -60,6 +55,7 @@
       when:
         - ansible_os_family == "RedHat"
         - ansible_distribution_major_version == "6"
+      ignore_errors: yes
 
     - name: remove files and directories 
       file:
