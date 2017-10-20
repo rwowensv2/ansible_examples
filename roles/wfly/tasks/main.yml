@@ -3,10 +3,10 @@
 # future {{ var }} the jdk/wfly version_filename
 - name: Unlink old 
   file:
-    path: {{ app_root }}/java
+    path: "{{ app_root }}/java"
     state: absent
 - file:
-    path: {{ app_root }}/wildfly
+    path: "{{ app_root }}/wildfly"
     state: absent
 
 - name: Groupadd
@@ -18,7 +18,7 @@
 - name: Useradd
   user:
     name: jboss
-    comment: "groupadmin@fqdn.dom"
+    comment: "russiansftw@msw.com"
     group: jboss
     uid: 2014
     shell: /bin/bash
@@ -33,8 +33,8 @@
 
 - name: get wildfly package
   get_url:
-    url: {{ wildfly_dlurl }}/{{ wildfly_tgz }}
-    dest: {{ app_root }}/{{ wildfly_tgz }}
+    url: "{{ wildfly_dlurl }}/{{ wildfly_tgz }}"
+    dest: "{{ app_root }}/{{ wildfly_tgz }}"
     force: yes
     mode: 0644
     validate_certs: no
@@ -42,8 +42,8 @@
 
 - name: get java
   get_url: 
-   url: {{ java_dlurl }}/jdk-8u131-linux-x64.tar.gz
-   dest: {{ app_root }}/jdk-8u131-linux-x64.tar.gz
+   url: "{{ java_dlurl }}/jdk-8u131-linux-x64.tar.gz"
+   dest: "{{ app_root }}/jdk-8u131-linux-x64.tar.gz"
    force: yes
    mode: 0644
    validate_certs: no
@@ -51,30 +51,30 @@
 
 - name: Unarchive wildfly
   unarchive:
-    src: {{ app_root }}/{{ wildfly_tgz }}
-    dest: {{ app_root }}
+    src: "{{ app_root }}/{{ wildfly_tgz }}"
+    dest: "{{ app_root }}"
     remote_src: yes
     owner: jboss
     group: jboss
 
 - name: Unarchive java
   unarchive:
-    src: {{ app_root }}/jdk-8u131-linux-x64.tar.gz
-    dest: {{ app_root }}
+    src: "{{ app_root }}/jdk-8u131-linux-x64.tar.gz"
+    dest: "{{ app_root }}"
     remote_src: yes
     owner: root
     group: root
 
 - name: Validate Symlinks
   file:
-    src: {{ app_root }}/jdk1.8.0_131
-    dest: {{ app_root }}/java
+    src: "{{ app_root }}/jdk1.8.0_131"
+    dest: "{{ app_root }}/java"
     owner: jboss
     group: jboss
     state: link
 - file:
-    src: {{ app_root }}/{{ wildfly_name }}
-    dest: {{ app_root }}/wildfly
+    src: "{{ app_root }}/{{ wildfly_name }}"
+    dest: "{{ app_root }}/wildfly"
     owner: jboss
     group: jboss
     state: link
@@ -82,6 +82,9 @@
   notify: alternatives
 
 # configure init
+# "ansible_distribution_major_version": "7"
+# "ansible_os_family": "RedHat"
+# (ansible_os_family == "RedHat" and ansible_distribution_major_version == "7")
 - name: copy conf
   copy:
     src: wildfly.conf
@@ -89,25 +92,52 @@
     owner: jboss
     group: jboss
 
-- name: copy init
+- name: copy launch
+  copy: 
+    src: launch.sh
+    dest: "{{ app_root }}/wildfly/bin/launch.sh"
+    owner: jboss
+    group: jboss
+    mode: 0755
+
+- name: copy systemd
   copy:
     src: wildfly.service
     dest: /etc/systemd/system/wildfly.service
     owner: root
     group: root
     mode: 0644
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version == "7"
 
-- name: copy launch
-  copy: 
-    src: launch.sh
-    dest: {{ app_root }}/wildfly/bin/launch.sh
-    owner: jboss
-    group: jboss
-    mode: 0755
-
-- name: enable service
+- name: enable systemd
   systemd:
     name: wildfly.service
     enabled: yes
-  notify: wildfly start
+    daemon_reload: yes
+    state: restarted
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version == "7"
+
+- name: copy init
+  copy:
+    src: wildfly.init
+    dest: /etc/init.d/wildfly
+    owner: root
+    group: root
+    mode: 0755
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version == "6"
+
+- name: enable service
+  service:
+    name: wildfly
+    enabled: yes
+    state: restarted
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version == "6"
   
