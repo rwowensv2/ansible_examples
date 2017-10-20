@@ -5,15 +5,10 @@
 # Basic: 
 # break out to roles, supply/define vars for standalone.xml copy etc.
 - name: wildfly_install
-  hosts: new
+  hosts: centos
   become: yes
-  become_method: su
+  become_method: sudo
   become_user: root
-  vars_files:
-    - ../vault.yaml
-  vars:
-    ansible_become_pass: "{{ root }}"
-#    password: $6$Jz/FWpVp$......khR/na8fqnPuJyr01
 
   tasks:
   - name: Unlink old 
@@ -41,7 +36,7 @@
 
   - name: get wildfly package
     get_url:
-      url: https://locationofpackage.dom/pub/wildfly-10.1.0.Final.tar.gz
+      url: https://centos67.owens.org/pub/app/java/wildfly/wildfly-10.1.0.Final.tar.gz
       dest: /opt/wildfly-10.1.0.Final.tar.gz
       force: yes
       mode: 0644
@@ -50,7 +45,7 @@
 
   - name: get java
     get_url: 
-      url: https://locationofpackage.dom/pub/jdk-8u131-linux-x64.tar.gz
+      url: https://centos67.owens.org/pub/app/java/wildfly/jdk-8u131-linux-x64.tar.gz
       dest: /opt/jdk-8u131-linux-x64.tar.gz
       force: yes
       mode: 0644
@@ -86,7 +81,7 @@
 
   - name: Get Custom Init Script
     get_url:
-      url: https://locationofpackage.dom/pub/wildfly10.init
+      url: https://centos67.owens.org/pub/app/java/wildfly/wildfly.systemd
       dest: /etc/init.d/wildfly
       force: yes
       mode: 0755

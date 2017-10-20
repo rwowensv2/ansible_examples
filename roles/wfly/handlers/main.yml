@@ -1,0 +1,23 @@
+---
+# handlers file for wfly
+- name: alternatives
+  alternatives:
+    name: java
+    link: /usr/bin/java
+    path: /opt/java/bin/java
+    priority: 1
+- alternatives:
+    name: javac
+    link: /usr/bin/javac
+    path: /opt/java/bin/javac
+    priority: 1
+- alternatives:
+    name: javaws
+    link: /usr/bin/javaws
+    path: /opt/java/bin/javaws
+    priority: 1
+
+- name: wildfly start
+  systemd: 
+    name: wildfly.service
+    state: restarted

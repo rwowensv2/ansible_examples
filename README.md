@@ -1,2 +1,2 @@
 # ansible_examples
-Some simple Ansible Playbook Examples
+Some really simple Ansible Playbook Examples

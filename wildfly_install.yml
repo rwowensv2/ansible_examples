@@ -1,0 +1,9 @@
+---
+- name: wildfly install
+  hosts: centos
+  become: yes
+  become_method: sudo
+  become_user: root
+  roles:
+    - wfly
+    

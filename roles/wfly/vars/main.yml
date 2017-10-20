@@ -1,0 +1,4 @@
+---
+# vars file for wfly
+wildfly_name: wildfly-{{ wildfly_version }}
+wildfly_tgz: '{{ wildfly_name }}.tar.gz'

@@ -1,0 +1,56 @@
+---
+#rm -f /opt/jdk-8u131-linux-x64.tar.gz
+#rm -f /opt/wildfly-10.1.0.Final.tar.gz
+#rm -rf /opt/jdk1.8.0_131
+#rm -rf /opt/wildfly-10.1.0.Final
+#systemctl stop wildfly.service
+#systemctl disable wildfly.service
+#rm /etc/systemd/system/[servicename]
+#rm /etc/systemd/system/[servicename] symlinks that might be related
+#systemctl daemon-reload
+#systemctl reset-failed
+- name: wildfly uninstall
+  hosts: centos
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  tasks:
+    - name: disable services
+      systemd:
+        name: wildfly.service
+        state: stopped
+      ignore_errors: yes
+    - systemd:
+        name: wildfly.service
+        enabled: no
+        daemon_reload: yes
+      ignore_errors: yes
+
+    - name: systemd reset-failed
+      command: systemctl reset-failed
+
+    - name: remove service file
+      file:
+        path: /etc/systemd/service/wildfly.service
+        state: absent
+
+    - name: remove files and directories 
+      file:
+        path: /opt/jdk-8u131-linux-x64.tar.gz
+        state: absent
+    - file:
+        path: /opt/wildfly-10.1.0.Final.tar.gz
+        state: absent
+    - file:
+        path: /opt/wildfly-10.1.0.Final
+        state: absent
+    - file:
+        path: /opt/jdk-8u131-linux-x64.tar.gz 
+        state: absent
+
+# alternatives --remove <name> <path>
+    - name: remove alternavites
+      command: /sbin/alternatives --remove java /opt/java/bin/java
+      ignore_errors: yes
+
