@@ -21,3 +21,19 @@
   systemd: 
     name: wildfly.service
     state: restarted
+
+- name: cleanup
+  file:
+    path: /opt/jdk-8u131-linux-x64.tar.gz
+    state: absent
+- file:
+    path: "/opt/{{ wildfly_tgz }}"
+    state: absent
+
+- name: symlink logs
+  file:
+    src: /opt/wildfly/standalone/log
+    dest: /var/log/wildfly
+    owner: jboss
+    group: jboss
+    state: link

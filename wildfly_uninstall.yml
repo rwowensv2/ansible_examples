@@ -16,7 +16,7 @@
   become_method: sudo
 
   tasks:
-    - name: disable services
+    - name: disable systemd
       systemd:
         name: wildfly.service
         state: stopped
@@ -26,14 +26,40 @@
         enabled: no
         daemon_reload: yes
       ignore_errors: yes
+      when:
+        - ansible_os_family == "RedHat"
+        - ansible_distribution_major_version == "7"
 
     - name: systemd reset-failed
       command: systemctl reset-failed
+      when:
+        - ansible_os_family == "RedHat"
+        - ansible_distribution_major_version == "7"
 
-    - name: remove service file
+    - name: remove systemd file
       file:
         path: /etc/systemd/service/wildfly.service
         state: absent
+      when:
+        - ansible_os_family == "RedHat"
+        - ansible_distribution_major_version == "7"
+
+    - name: disable services
+      service:
+        name: wildfly
+        enabled: no
+        state: stopped
+      when:
+        - ansible_os_family == "RedHat"
+        - ansible_distribution_major_version == "6"
+
+    - name: remove service file
+      file:
+        path: /etc/init.d/wildfly
+        state: absent
+      when:
+        - ansible_os_family == "RedHat"
+        - ansible_distribution_major_version == "6"
 
     - name: remove files and directories 
       file:
@@ -46,11 +72,20 @@
         path: /opt/wildfly-10.1.0.Final
         state: absent
     - file:
-        path: /opt/jdk-8u131-linux-x64.tar.gz 
+        path: /opt/jdk1.8.0_131
+        state: absent
+    - file:
+        path: /var/log/wildfly
+        state: absent
+    - file:
+        path: /opt/wildfly
+        state: absent
+    - file:
+        path: /opt/java
         state: absent
 
 # alternatives --remove <name> <path>
-    - name: remove alternavites
+    - name: remove alternatives
       command: /sbin/alternatives --remove java /opt/java/bin/java
       ignore_errors: yes
 

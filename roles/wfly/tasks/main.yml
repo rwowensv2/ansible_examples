@@ -38,6 +38,7 @@
     force: yes
     mode: 0644
     validate_certs: no
+    timeout: 300
   ignore_errors: no
 
 - name: get java
@@ -47,6 +48,7 @@
    force: yes
    mode: 0644
    validate_certs: no
+   timeout: 300
   ignore_errors: no
 
 - name: Unarchive wildfly
@@ -79,7 +81,9 @@
     group: jboss
     state: link
   ignore_errors: no
-  notify: alternatives
+  notify: 
+    - alternatives
+    - cleanup
 
 # configure init
 # "ansible_distribution_major_version": "7"
@@ -120,6 +124,8 @@
   when:
     - ansible_os_family == "RedHat"
     - ansible_distribution_major_version == "7"
+  notify:
+    - symlink logs
 
 - name: copy init
   copy:
@@ -140,4 +146,6 @@
   when:
     - ansible_os_family == "RedHat"
     - ansible_distribution_major_version == "6"
+  notify:
+    - symlink logs
   
