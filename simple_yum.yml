@@ -1,9 +1,11 @@
 ---
 - name: patch rhel
-  hosts: centos67.owens.org
+  hosts: centos
   become: yes
   become_method: sudo
   become_user: root
+  roles:
+    - common
 
   tasks:
   - name: patch boxes

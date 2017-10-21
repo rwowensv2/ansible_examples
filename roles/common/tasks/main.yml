@@ -1,6 +1,6 @@
 ---
 # tasks file for common
-- name: test copy
-  copy:
-    src: test.txt
-    dest: /home/rowens/test.txt
+- name: selinux permissive
+  selinux:
+    policy: targeted
+    state: permissive

@@ -1,9 +1,10 @@
 ---
 - name: wildfly install
-  hosts: centos67.owens.org
+  hosts: centos
   become: yes
   become_method: sudo
   become_user: root
   roles:
+    - common
     - wfly
 

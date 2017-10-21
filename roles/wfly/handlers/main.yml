@@ -33,7 +33,7 @@
 - name: symlink logs
   file:
     src: /opt/wildfly/standalone/log
-    dest: /var/log/wildfly
+    dest: /var/log/wildfly/log
     owner: jboss
     group: jboss
     state: link

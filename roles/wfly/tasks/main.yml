@@ -43,8 +43,8 @@
 
 - name: get java
   get_url: 
-   url: "{{ java_dlurl }}/jdk-8u131-linux-x64.tar.gz"
-   dest: "{{ app_root }}/jdk-8u131-linux-x64.tar.gz"
+   url: "{{ java_dlurl }}/jdk-8u{{ jdkver }}-linux-x64.tar.gz"
+   dest: "{{ app_root }}/jdk-8u{{ jdkver }}-linux-x64.tar.gz"
    force: yes
    mode: 0644
    validate_certs: no
@@ -61,7 +61,7 @@
 
 - name: Unarchive java
   unarchive:
-    src: "{{ app_root }}/jdk-8u131-linux-x64.tar.gz"
+    src: "{{ app_root }}/jdk-8u{{ jdkver }}-linux-x64.tar.gz"
     dest: "{{ app_root }}"
     remote_src: yes
     owner: root
@@ -69,7 +69,7 @@
 
 - name: Validate Symlinks
   file:
-    src: "{{ app_root }}/jdk1.8.0_131"
+    src: "{{ app_root }}/jdk1.8.0_{{ jdkver }}"
     dest: "{{ app_root }}/java"
     owner: jboss
     group: jboss
@@ -119,13 +119,10 @@
   systemd:
     name: wildfly.service
     enabled: yes
-    daemon_reload: yes
     state: restarted
   when:
     - ansible_os_family == "RedHat"
     - ansible_distribution_major_version == "7"
-  notify:
-    - symlink logs
 
 - name: copy init
   copy:

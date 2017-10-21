@@ -1,7 +1,7 @@
 ---
 #
 - name: wildfly uninstall
-  hosts: centos67.owens.org
+  hosts: centos
   become: yes
   become_user: root
   become_method: sudo
@@ -59,7 +59,7 @@
 
     - name: remove files and directories 
       file:
-        path: /opt/jdk-8u131-linux-x64.tar.gz
+        path: /opt/jdk-8u151-linux-x64.tar.gz
         state: absent
     - file:
         path: /opt/wildfly-10.1.0.Final.tar.gz
@@ -68,7 +68,7 @@
         path: /opt/wildfly-10.1.0.Final
         state: absent
     - file:
-        path: /opt/jdk1.8.0_131
+        path: /opt/jdk1.8.0_151
         state: absent
     - file:
         path: /var/log/wildfly
