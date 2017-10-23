@@ -1,0 +1,9 @@
+---
+# tasks file for jolokia
+#
+- name: get jolokia
+  get_url:
+    name: "{{ jolokia_url }}"
+    dest: /tmp/jolokia.war
+    owner: jboss
+    group: jboss
