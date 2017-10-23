@@ -1,0 +1,10 @@
+---
+# tasks file for pci
+- block:
+  - name: yum conf check
+    shell: grep "gpgcheck=1" /etc/yum.conf
+    changed_when: false
+  rescue:
+   - name: 
+     debug:
+       msg: "yum configuration insecure"
