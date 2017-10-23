@@ -37,3 +37,10 @@
     owner: jboss
     group: jboss
     state: link
+
+- name: notify
+  slack:
+    token: token/generated/slack
+    msg: '{{ inventory_hostname }} Wildfly install completed'
+    channel: "#ansible_linux"
+    username: "bot_user"
