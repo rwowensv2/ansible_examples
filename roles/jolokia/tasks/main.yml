@@ -7,3 +7,9 @@
     dest: /tmp/jolokia.war
     owner: jboss
     group: jboss
+
+- name: deploy
+   jboss:
+     src: /tmp/jolokia.war
+     deployment: hello.war
+     state: present
