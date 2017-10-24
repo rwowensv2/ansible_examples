@@ -1,7 +1,7 @@
 Role Name
 =========
 
-Generic, created with ansible-galaxy init.  Directory contains some basic role examples.
+Wildfly Used to show a example of breaking out a playbook, into a role.
 
 Requirements
 ------------
