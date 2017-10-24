@@ -3,6 +3,7 @@
 # Playbook Old Script
 # --
 # Basic: 
+# simple example
 # break out to roles, supply/define vars for standalone.xml copy etc.
 - name: wildfly_install
   hosts: centos
