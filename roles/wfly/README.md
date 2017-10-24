@@ -21,7 +21,6 @@ Example Playbook
 ----------------
 
 
-```yml
 - hosts: servers
   roles:
     - wfly
