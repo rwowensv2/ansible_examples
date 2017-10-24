@@ -5,6 +5,7 @@
   become_method: sudo
   become_user: root
 # set password?  tower defined in web console.
+# yes the below is bogus (sigh)
 #  vars:
 #    password: $6$IS3t7BnV$/ffHD7UOLRw10OjckGuunJV85CgocrCPAhhFYaiVsYukp7TY2.JEarXpDEuujZ5MaoR5A3MiGr3MxoPj8IxEt0
   remote_user: root
