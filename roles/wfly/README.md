@@ -29,8 +29,8 @@ Example Playbook
 License
 -------
 
-BSD
+GPL
 
 Author Information
 ------------------
-[https://github.com/rwowensv2](https://github.com/rwowensv2)
+[Github](https://github.com/rwowensv2)
