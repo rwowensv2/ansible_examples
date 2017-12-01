@@ -1,0 +1,22 @@
+---
+- name: sysctl config
+  hosts: all
+
+# arpflux workaround
+  tasks:
+    - name: arp ignore
+      sysctl:
+        name: net.ipv4.conf.all.arp_ignore
+        value: 1
+      when:
+       - ansible_os_family == "RedHat"
+       - ansible_distribution_major_version == "6"
+       
+    - name: arp announce 
+      sysctl:
+        name: net.ipv4.conf.all.arp_announce
+        value: 2
+        reload: yes
+      when:
+       - ansible_os_family == "RedHat"
+       - ansible_distribution_major_version == "6"
