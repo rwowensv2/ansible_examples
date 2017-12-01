@@ -1,0 +1,25 @@
+---
+# service_jbossrdpd_restart.yml
+# Description: Restart the jboss service post release   
+
+- name: Retart JBoss-Slave Services
+  hosts: all
+# vars:
+#   runstate: started || stopped || restarted || reloaded
+
+  tasks:
+    - name: Service JBoss-Slave
+      service: 
+        name: jboss-as-slave
+        state: {{ state }}
+      when:
+       - ansible_os_family == "RedHat"
+       - ansible_distribution_major_version == "6"
+
+    - name: Systemd JBoss-Slave
+      systemd:
+        name: jboss-as-slave
+        state: {{ state }}
+      when:
+       - ansible_os_family == "RedHat"
+       - ansible_distribution_major_version == "7"
