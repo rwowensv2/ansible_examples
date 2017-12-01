@@ -1,0 +1,11 @@
+---
+- name: limits config
+  hosts: all
+ vars:
+   host_role: standard || oracle 
+
+  tasks:
+  - name: copy limits.conf config
+    copy:
+      src: files/limits.conf.{{ host_role }}
+      dest: /etc/security/limits.conf
