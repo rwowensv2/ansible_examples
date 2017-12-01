@@ -1,6 +1,6 @@
 ---
-# service_jbossrdpd_restart.yml
-# Description: Restart the jboss service post release   
+# jboss_service.yml
+# Description: Manage JBoss Service
 
 - name: Retart JBoss-Slave Services
   hosts: all
