@@ -32,37 +32,39 @@
    - name: Get Production Health Checks
      hosts: 127.0.0.1
      connection: local
+     vars:
+        bluegreen: p1 || p2
 
      tasks:
      - name: Remove Old Files
        file:
-         path: /tmp/app2p1_l0.html
+         path: /tmp/app2{{ bluegreen }}_l0.html
          state: absent
  
      - file:
-         path: /tmp/app2p1_l1.html
+         path: /tmp/app2{{ bluegreen }}_l1.html
          state: absent
  
      - file:
-         path: /tmp/app1p1_l0.html
+         path: /tmp/app1{{ bluegreen }}_l0.html
          state: absent
  
      - file:
-         path: /tmp/app1p1_l1.html
+         path: /tmp/app1{{ bluegreen }}_l1.html
          state: absent
  
      - file:
-         path: /tmp/app0p1_l1.html
+         path: /tmp/app0{{ bluegreen }}_l1.html
          state: absent
  
      - file:
-         path: /tmp/app0p1_l2.html
+         path: /tmp/app0{{ bluegreen }}_l2.html
          state: absent
  
      - name: APP2_L0
        get_url:
-         url: https://appintp1.app2.loc.appvipurl.com/app2web/api/l0.health
-         dest: /tmp/app2p1_l0.html 
+         url: https://appint{{ bluegreen }}.app2.loc.appvipurl.com/app2web/api/l0.health
+         dest: /tmp/app2{{ bluegreen }}_l0.html 
          force: yes
          mode: 0666
          validate_certs: no
@@ -70,89 +72,89 @@
 
      - name: APP2_L1
        get_url:
-         url: https://appintp1.app2.loc.appvipurl.com/app2web/api/l1.health
-         dest: /tmp/app2p1_l1.html
+         url: https://appint{{ bluegreen }}.app2.loc.appvipurl.com/app2web/api/l1.health
+         dest: /tmp/app2{{ bluegreen }}_l1.html
          force: yes
          mode: 0666
          validate_certs: no
        ignore_errors: yes
 
      - block:
-        - name: Email APP2 P1
+        - name: Email APP2 {{ bluegreen }}
           mail:
             host: 127.0.0.1
             port: 25
             from: service@ansible.fqdn.com
             to: xxxxxx
             cc: xxxxxx, xxxxxx
-            subject: APP2 P1 Health Checks
+            subject: APP2 {{ bluegreen }} Health Checks
             body: 'Ansible Playbook; APP2 health check: see attached html'
-            attach: /tmp/app2p1_l0.html /tmp/app2p1_l1.html
+            attach: /tmp/app2{{ bluegreen }}_l0.html /tmp/app2{{ bluegreen }}_l1.html
        rescue:
-        - name: Email APP2 P1 Fail
+        - name: Email APP2 {{ bluegreen }} Fail
           mail: 
             host: 127.0.0.1
             port: 25
             from: service@ansible.fqdn.com
             to: xxxxxx
             cc: xxxxxx, xxxxxx
-            subject: APP2 P1 Health Check Failed
-            body: 'One of the APP2 P1 Health Checks failed'          
+            subject: APP2 {{ bluegreen }} Health Check Failed
+            body: 'One of the APP2 {{ bluegreen }} Health Checks failed'          
 
-     - name: APP1P1_L0
+     - name: APP1{{ bluegreen }}_L0
        get_url:
-         url: https://appintp1.app1.loc.appvipurl.com/app1/api/l0.health
-         dest: /tmp/app1p1_l0.html
+         url: https://appint{{ bluegreen }}.ap{{ bluegreen }}.loc.appvipurl.com/ap{{ bluegreen }}/api/l0.health
+         dest: /tmp/ap{{ bluegreen }}{{ bluegreen }}_l0.html
          force: yes
          mode: 0666
          validate_certs: no
        ignore_errors: yes
 
-     - name: APP1P1_L1
+     - name: APP1{{ bluegreen }}_L1
        get_url:
-         url: https://appintp1.app1.loc.appvipurl.com/app1/api/l1.health
-         dest: /tmp/app1p1_l1.html
+         url: https://appint{{ bluegreen }}.app1.loc.appvipurl.com/app1/api/l1.health
+         dest: /tmp/app1{{ bluegreen }}_l1.html
          force: yes
          mode: 0666
          validate_certs: no
        ignore_errors: yes
 
      - block:
-        - name: Email APP1 P1
+        - name: Email APP1 {{ bluegreen }}
           mail:
             host: 127.0.0.1
             port: 25
             from: service@ansible.fqdn.com
             to: xxxxxx
             cc: xxxxxx, xxxxxx
-            subject: APP1 P1 Health Checks
+            subject: APP1 {{ bluegreen }} Health Checks
             body: 'Ansible Playbook; APP1 health check: see attached html'
-            attach: /tmp/app1p1_l0.html /tmp/app1p1_l1.html
+            attach: /tmp/app1{{ bluegreen }}_l0.html /tmp/app1{{ bluegreen }}_l1.html
        rescue:
-        - name: Email APP1 P1 Fail
+        - name: Email AP{{ bluegreen }} {{ bluegreen }} Fail
           mail: 
             host: 127.0.0.1
             port: 25
             from: service@ansible.fqdn.com
             to: xxxxxx
             cc: xxxxxx, xxxxxx
-            subject: APP1 P1 Health Check Failed
-            body: 'One of the APP1 P1 Health Checks failed'    
+            subject: APP1 {{ bluegreen }} Health Check Failed
+            body: 'One of the APP1 {{ bluegreen }} Health Checks failed'    
 
-     - name: APP0P1_L1
+     - name: APP0{{ bluegreen }}_L1
        get_url:
-         url: https://appintp1.app0.loc.appvipurl.com/L1.health
-         dest: /tmp/app0p1_l1.html
+         url: https://appint{{ bluegreen }}.app0.loc.appvipurl.com/L1.health
+         dest: /tmp/app0{{ bluegreen }}_l1.html
          force: yes
          mode: 0666
          timeout: 20
          validate_certs: no
        ignore_errors: yes
 
-     - name: APP0P1_L2
+     - name: APP0{{ bluegreen }}_L2
        get_url:
-         url: https://appintp1.app0.loc.appvipurl.com/L2.health
-         dest: /tmp/app0p1_l2.html
+         url: https://appint{{ bluegreen }}.app0.loc.appvipurl.com/L2.health
+         dest: /tmp/app0{{ bluegreen }}_l2.html
          force: yes
          mode: 0666
          timeout: 20
@@ -160,23 +162,23 @@
        ignore_errors: yes
 
      - block:
-        - name: Email APP0 P1
+        - name: Email APP0 {{ bluegreen }}
           mail:
             host: 127.0.0.1
             port: 25
             from: service@ansible.fqdn.com
             to: xxxxxx
             cc: xxxxxx, xxxxxx
-            subject: APP0 P1 Health Checks
+            subject: APP0 {{ bluegreen }} Health Checks
             body: 'Ansible Playbook; APP0 health check: see attached html'
-            attach: /tmp/app0p1_l1.html /tmp/app0p1_l2.html
+            attach: /tmp/app0{{ bluegreen }}_l1.html /tmp/app0{{ bluegreen }}_l2.html
        rescue:
-        - name: Email APP0 P1 Fail
+        - name: Email APP0 {{ bluegreen }} Fail
           mail: 
             host: 127.0.0.1
             port: 25
             from: service@ansible.fqdn.com
             to: xxxxxx
             cc: xxxxxx, xxxxxx
-            subject: APP0 P1 Health Check Failed
-            body: 'One of the APP0 P1 Health Checks failed'  
+            subject: APP0 {{ bluegreen }} Health Check Failed
+            body: 'One of the APP0 {{ bluegreen }} Health Checks failed'  
