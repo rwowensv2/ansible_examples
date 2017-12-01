@@ -1,7 +1,7 @@
 Role Name
 =========
 
-Generic, created with ansible-galaxy init.  Directory contains some basic role examples.
+Wildfly Used to show a example of breaking out a playbook, into a role.
 
 Requirements
 ------------
@@ -20,17 +20,17 @@ A list of other roles hosted on Galaxy should go here, plus any details in regar
 Example Playbook
 ----------------
 
-
-```yml
+```
 - hosts: servers
   roles:
     - wfly
+```
 
 License
 -------
 
-BSD
+GPL
 
 Author Information
 ------------------
-[https://github.com/rwowensv2](https://github.com/rwowensv2)
+[Github](https://github.com/rwowensv2)

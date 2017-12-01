@@ -4,3 +4,9 @@
   selinux:
     policy: targeted
     state: permissive
+
+- name: patch
+  yum:
+    name: *
+    state: latest
+#    exclude: kernel*
