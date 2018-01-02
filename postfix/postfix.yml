@@ -1,0 +1,36 @@
+---
+- name: postfix
+  hosts: all
+  # Update Group/Pass Var
+  var:
+    relay_host: ourmailserver.ourdomain.com
+
+  - tasks:
+    - name: package
+      yum:
+        name: postfix
+        state: latest
+
+    - name: configuration
+      template:
+        src: files/main.cf.j2
+        dest: /etc/postfix/main.cf
+        force: yes
+
+    - name: postfix service
+      service:
+        name: postfix
+        enabled: yes
+        state: started
+      when:
+       - ansible_os_family == "RedHat"
+       - ansible_distribution_major_version == "6"
+
+    - name: postfix systemd
+      systemd:
+        name: postfix
+        enabled: yes
+        state: started
+      when:
+       - ansible_os_family == "RedHat"
+       - ansible_distribution_major_version == "7"  
