@@ -1,0 +1,12 @@
+---
+- name:  Logwatch Config
+  hosts: all
+
+  tasks:
+  - name:  Logwatch Config File
+    template:
+      src: ./files/logwatch.conf.j2
+      dest: /etc/logwatch/conf/logwatch.conf
+      owner: root
+      group: root
+      mode: 0644

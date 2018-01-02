@@ -1,10 +1,7 @@
 # ansible_examples
 Some really simple Ansible Playbook Examples
 
-<<<<<<< HEAD
-# 
-=======
-# tower
+# Tower
 Note some of the playbooks are written for tower, so header is 
 simplified.
 
@@ -13,4 +10,3 @@ simplified.
 	  hosts: all
 
 fin'
->>>>>>> master
