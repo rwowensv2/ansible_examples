@@ -1,0 +1,42 @@
+---
+- name: disable services
+  hosts: all
+
+  tasks:
+    - name: stop
+      service:
+        name: "{{ item }}"
+        enabled: no
+        state: stopped
+      with_items:
+        - avahi-daemon
+        - avahi-dnsconfd
+        - cpuspeed
+        - gpm
+        - ip6tables
+        - iscsi
+        - iscsid
+        - mdmonitor
+        - mysqld
+        - nscd
+        - portmap
+        - readahead_early
+        - readahead_later
+        - rpcgssd
+        - rpcidmapd
+        - sendmail
+        - yum-updatesd
+      when:
+       - ansible_os_family == "RedHat"
+       - ansible_distribution_major_version == "6"
+    - systemd:
+        name: "{{ item }}"
+        enabled: no
+        state: stopped
+      with_items:
+        - cups 
+        - cups-lpd
+        - xinted
+      when:
+       - ansible_os_family == "RedHat"
+       - ansible_distribution_major_version =="7"
