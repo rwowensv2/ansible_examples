@@ -17,4 +17,5 @@ Must provide *host_role*
 
 Note(s)
 =======
-na
+
+This is an example, consider adding to common role.

@@ -14,3 +14,6 @@ Requirements
 
 Note(s)
 =======
+
+This is an example, consider adding to common role.
+

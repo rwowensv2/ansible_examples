@@ -21,6 +21,7 @@ var.
 
 Note(s)
 =======
-https://github.com/rwowensv2
 
-Create role?
+This is an example, consider adding to common role.
+
+https://github.com/rwowensv2
