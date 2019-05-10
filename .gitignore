@@ -1,2 +1,5 @@
 *.retry
 .gitignore
+*.rpm
+*.tgz
+*.gz
