@@ -4,4 +4,4 @@ wildfly_version: 10.1.0.Final
 app_root: /opt
 wildfly_dlurl: http://download.jboss.org/wildfly/10.1.0.Final
 java_dlurl: http://inspiron.owens.org/files
-jdkver: 151
+jdkver: 211
