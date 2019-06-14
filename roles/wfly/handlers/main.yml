@@ -24,15 +24,15 @@
 
 - name: cleanup
   file:
-    path: /opt/jdk-8u131-linux-x64.tar.gz
+    path: "{{ app_root }}jdk-8u{{ jdkver }}-linux-x64.tar.gz"
     state: absent
 - file:
-    path: "/opt/{{ wildfly_tgz }}"
+    path: "{{ app_root }}{{ wildfly_tgz }}"
     state: absent
 
 - name: symlink logs
   file:
-    src: /opt/wildfly/standalone/log
+    src: "{{ app_root }}wildfly/standalone/log"
     dest: /var/log/wildfly/log
     owner: jboss
     group: jboss

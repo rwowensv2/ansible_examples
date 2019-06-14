@@ -1,7 +1,8 @@
 ---
 # defaults file for wfly
 wildfly_version: 10.1.0.Final
+wildfly_tgz: "{{ wildfly_version }}.tar.gz"
 app_root: /opt
-wildfly_dlurl: http://download.jboss.org/wildfly/10.1.0.Final
-java_dlurl: http://inspiron.owens.org/files
+wildfly_dlurl: https://download.jboss.org/wildfly/10.1.0.Final
+java_dlurl: http://192.168.1.6:8080/
 jdkver: 211

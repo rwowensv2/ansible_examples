@@ -1,0 +1,29 @@
+- name: Unlink old 
+  file:
+    path: "{{ app_root }}/java"
+    state: absent
+- file:
+    path: "{{ app_root }}/wildfly"
+    state: absent
+
+- name: Groupadd
+  group:
+    gid: 2014
+    name: jboss
+    state: present
+
+- name: Useradd
+  user:
+    name: jboss
+    comment: "russiansftw@msw.com"
+    group: jboss
+    uid: 2014
+    shell: /bin/bash
+    state: present
+
+- name: wildfly etc
+  file:
+    path: /etc/wildfly
+    state: directory
+    owner: jboss
+    group: jboss
