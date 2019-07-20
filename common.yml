@@ -1,0 +1,58 @@
+---
+- name: common
+  hosts: all:!localhost
+  become: yes
+  become_method: sudo
+  become_user: root
+
+  tasks:
+  - name: patch boxes
+    yum: 
+      name: '*'
+      state: latest
+
+  - name: git install
+    yum:
+      name: git.x86_64
+      state: present
+  
+  - name: docker remove old
+    yum: 
+      name: "{{ item }}"
+      state: absent
+    with_items:
+      - docker-client
+      - docker-client-latest
+      - docker-common
+      - docker-latest
+      - docker-latest-logrotate
+      - docker-logrotate
+      - docker-engine
+
+  - name: docker repo
+    yum:
+      name: "{{ item }}"
+      state: latest
+    with_items: 
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+
+  - name: add docker repo
+    command: "yum config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo"
+
+  - name: install docker
+    yum: 
+      name: "{{ item }}"
+      state: present
+    with_items: 
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+
+  - name: enable firewalld
+    systemd:
+      name: firewalld
+      enabled: yes
+      state: started
+    
