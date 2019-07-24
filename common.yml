@@ -1,9 +1,15 @@
 ---
 - name: common
-  hosts: all:!localhost
+  hosts: box
   become: yes
-  become_method: sudo
+  become_method: su
   become_user: root
+
+  vars_files:
+    - ~/vault.yaml
+
+  vars:
+    - ansible_become_pass: "{{ root_remote }}"
 
   tasks:
   - name: patch boxes
@@ -13,7 +19,7 @@
 
   - name: common packages
     yum:
-      name: ['git.x86_64', 'unzip', 'yum-utils', 'device-mapper-persistent-data', 'lvm2']
+      name: ['git.x86_64', 'unzip', 'net-tools', 'yum-utils', 'device-mapper-persistent-data', 'lvm2', 'bind-utils']
       state: present
   
   - name: docker remove old
@@ -28,6 +34,15 @@
     yum: 
       name: ['docker-ce', 'docker-ce-cli', 'containerd.io']
       state: present
+
+  - name: enable docker
+    systemd:
+      name: "{{ item }}"
+      enabled: yes
+      state: started
+    with_items:
+      - docker
+      - docker.socket
 
   - name: enable firewalld
     systemd:
