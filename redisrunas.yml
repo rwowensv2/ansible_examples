@@ -1,0 +1,131 @@
+---
+- name: Redis runas redis
+# Redis Reconfigure to 'runas' redis user
+  hosts: redis_masters
+  become: yes
+  become_method: su
+  become_user: root
+
+  vars_files:
+    - ~/vault.yaml
+
+  vars:
+    ansible_ssh_user: "{{ me }}"
+    ansible_become_pass: "{{ root_remote }}"
+
+  tasks:
+  - name: Ensure group redis exists
+    group:
+      name: redis
+      gid: 9000
+      state: present
+    tags: sentinel
+
+  - name: added redis user
+    user:
+      name: redis
+      comment: serve-linuxadmins@incomm.com
+      uid: 9000
+      group: redis
+      shell: /bin/bash
+    tags: sentinel
+
+  - name: rdbbug
+    file:
+      path: /tmp/dump.rdb
+      owner: redis
+      group: redis
+    ignore_errors: yes
+
+  - name: shutdown redis
+    systemd:
+      name: redis.service
+      state: stopped
+    tags: rollback
+
+  - name: shutdown sentinel
+    systemd:
+      name: sentinel.service
+      state: stopped
+    tags: 
+      - rollback
+      - sentinel
+
+  - name: chown redis.conf
+    file:
+      path: /etc/redis/redis.conf
+      owner: redis
+      group: redis
+
+  - name: chown sentinel.conf
+    file:
+      path: /etc/redis/sentinel.conf
+      owner: redis
+      group: redis
+    tags:
+      - sentinel
+  - file: 
+      path: /var/log/redis_6379.log
+      owner: redis
+      group: redis
+
+# Testing/POC Only!  Update Grub
+  - name: copy transhuge script
+    copy:
+      src: transhuge
+      dest: /usr/local/bin/transhuge
+      owner: root
+      group: root
+      mode: 0750
+
+  - name: copy redis systemd
+    copy:
+      src: ./files/redis.service
+      dest: /etc/systemd/system/redis.service
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: copy sentinel systemd
+    copy:
+      src: ./files/sentinel.service
+      dest: /etc/systemd/system/sentinel.service
+      owner: root
+      group: root
+      mode: 0644
+    tags:
+      - sentinel
+
+  - name: copy redis systemd
+    copy:
+      src: ./files/redis.service.root
+      dest: /etc/systemd/system/redis.service
+      owner: root
+      group: root
+      mode: 0644
+    tags: ['never','rollback']
+
+  - name: copy sentinel systemd
+    copy:
+      src: ./files/sentinel.service.root
+      dest: /etc/systemd/system/sentinel.service
+      owner: root
+      group: root
+      mode: 0644
+    tags: ['never','rollback']
+
+  - name: redis restart
+    systemd:
+      name: redis.service
+      daemon_reload: yes
+      state: started
+    tags: 
+      - rollback
+  - systemd:
+      name: sentinel.service
+      daemon_reload: yes
+      state: started
+    tags: 
+      - rollback
+      - sentinel
+    

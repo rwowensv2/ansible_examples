@@ -1,0 +1,21 @@
+[Unit]
+Description=Redis
+After=syslog.target network.target 
+
+[Service]
+Type=simple
+PIDFile=/var/run/redis.pid
+PermissionsStartOnly=true
+ExecStartPre=/usr/local/bin/transhuge
+#ExecStartPre=/bin/sh -c "/usr/bin/echo never | /bin/tee /sys/kernel/mm/transparent_hugepage/enabled"
+ExecStart=/usr/local/bin/redis-server /etc/redis/redis.conf
+ExecStop=/bin/kill -15 $MAINPID
+RestartSec=5s
+Restart=on-success
+User=redis
+Group=redis
+LimitNOFILE=10032
+
+[Install]
+WantedBy=multi-user.target
+

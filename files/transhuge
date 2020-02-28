@@ -1,0 +1,6 @@
+#!/bin/sh
+# POC Only 
+###/bin/sh -c "/usr/bin/echo never | tee /sys/kernel/mm/transparent_hugepage/enabled"
+/usr/bin/echo never | tee /sys/kernel/mm/transparent_hugepage/enabled
+#/usr/bin/echo never | tee /tmp/teetest
+

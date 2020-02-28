@@ -1,0 +1,19 @@
+[Unit]
+Description=Redis
+After=syslog.target network.target 
+
+[Service]
+Type=simple
+PIDFile=/var/run/redis.pid
+ExecStartPre=+/usr/local/bin/transhuge
+ExecStart=/usr/local/bin/redis-server /etc/redis/redis.conf
+ExecStop=/bin/kill -15 $MAINPID
+RestartSec=5s
+Restart=on-success
+User=root
+#User=redis
+#Group=redis
+#LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

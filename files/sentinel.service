@@ -1,0 +1,13 @@
+[Unit]
+Description=Sentienl
+After=syslog.target network.target
+
+[Service]
+ExecStart=/usr/local/bin/redis-sentinel /etc/redis/sentinel.conf
+RestartSec=5s
+Restart=on-success
+User=redis
+Group=redis
+
+[Install]
+WantedBy=multi-user.target
