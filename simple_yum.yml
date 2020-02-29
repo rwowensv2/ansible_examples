@@ -1,15 +1,15 @@
 ---
 - name: patch rhel
-  hosts: centos
+  hosts: vbox3.owens.dev vbox2.owens.dev
   become: yes
   become_method: sudo
   become_user: root
-  roles:
-    - common
+#  roles:
+#    - common
 
   tasks:
   - name: patch boxes
     yum: 
       name: '*'
       state: latest
-      #       exclude: kernel*
+      exclude: kernel*
