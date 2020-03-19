@@ -1,0 +1,16 @@
+---
+# Simple example of Jinja Loops
+- name: Jinja Loops
+  hosts: localhost
+  gather_facts: no
+
+  vars_files:
+    - "~/vault.yaml"
+
+  tasks:
+    - name: Jinja Template
+      template:
+        src: ./files/jinjaloop.j2
+        dest: /tmp/out.txt
+
+
