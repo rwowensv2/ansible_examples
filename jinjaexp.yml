@@ -1,5 +1,6 @@
 ---
 # Simple example of Jinja Loops
+# https://www.arctiq.ca/our-blog/2017/2/16/ansible-jinja-warrior-loop-variable-scope/
 - name: Jinja Loops
   hosts: localhost
   gather_facts: no
