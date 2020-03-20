@@ -8,3 +8,6 @@
   tasks:
   - name: shutdown
     command: /sbin/shutdown now
+    async: 1
+    poll: 0
+    ignore_errors: true

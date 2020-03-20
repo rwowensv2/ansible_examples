@@ -1,0 +1,11 @@
+---
+# test inventory changes
+- name: uptime
+  hosts: swarm
+
+  tasks:
+    - name: uptime
+      command: /usr/bin/uptime
+      register: uptime
+    - debug:
+        var: uptime.stdout_lines
