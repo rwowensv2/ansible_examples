@@ -1,9 +1,9 @@
 # ACLs 
 - name: audit acls
-  hosts: centos
+  hosts: vbox1.owens.dev
   become: yes
   become_user: root
-  become_method: su
+  become_method: sudo
   gather_facts: no
 
   vars_files: 
@@ -15,10 +15,12 @@
   tasks:
     - name: set acls
       acl:
-        path: "/mnt/testdir"
-        entity: billy 
+        path: "/mnt/test"
+        entity: rowens 
         etype: user
-        permissions: r
+        permissions: rwx
         default: yes
+        recalculate_mask: mask
+        state: present
 
 
