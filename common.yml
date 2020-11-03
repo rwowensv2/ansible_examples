@@ -1,6 +1,6 @@
 ---
 - name: common
-  hosts: centvbox.owens.dev
+  hosts: localhost
   become: yes
   become_method: su
   become_user: root

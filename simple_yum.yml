@@ -1,15 +1,22 @@
 ---
 - name: patch rhel
-  hosts: centos
+  hosts: rancher
   become: yes
   become_method: sudo
   become_user: root
-  roles:
-    - common
+#  roles:
+#    - common
+
+  vars_files:
+    - ~/vault.yaml
+
+  vars:
+    - ansible_ssh_pass: "{{ sudo }}"
+    - ansible_become_pass: "{{ sudo }}"
 
   tasks:
   - name: patch boxes
     yum: 
       name: '*'
       state: latest
-      #       exclude: kernel*
+      exclude: kernel*

@@ -9,4 +9,3 @@ simplified.
 	- name: name
 	  hosts: all
 
-fin'

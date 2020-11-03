@@ -1,0 +1,13 @@
+---
+- hosts: swarm
+  become: yes
+  become_method: sudo
+  become_user: root
+  gather_facts: no
+
+  tasks:
+  - name: shutdown
+    command: /sbin/shutdown now
+    async: 1
+    poll: 0
+    ignore_errors: true
