@@ -1,0 +1,11 @@
+---
+- name: stop
+  hosts: swarm
+  become: yes
+  become_method: sudo
+  become_user: root
+
+  tasks:
+    - systemd:
+        name: firewalld
+        state: stopped

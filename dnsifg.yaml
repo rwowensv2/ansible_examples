@@ -1,0 +1,15 @@
+---
+- hosts: swarm
+  become: yes
+  become_method: sudo
+  become_user: root
+  gather_facts: no
+
+  tasks:
+  - name: edit ifcfg dns
+    lineinefile:
+      path: /etc/sysconfig/network-scripts/ifcfg-enp0s3
+      backrefs: yes
+      regexp: '^DNS1=192.168.1.1'
+      line: 'DNS1=192.168.1.21'
+      state: present
