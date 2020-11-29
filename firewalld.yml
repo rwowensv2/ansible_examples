@@ -6,6 +6,14 @@
   become_user: root
 
   tasks:
-    - systemd:
+    - name: stop
+      systemd:
         name: firewalld
         state: stopped
+      tags: stop
+
+    - name: start
+      systemd:
+        name: firewalld
+        state: started
+      tags: start
